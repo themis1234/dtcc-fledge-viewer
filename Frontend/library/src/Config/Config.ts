@@ -261,7 +261,7 @@ export class Config {
                 'Whether we should attempt to auto connect to the signalling server or show a click to start prompt.',
                 settings && settings.hasOwnProperty(Flags.AutoConnect) ?
                     settings[Flags.AutoConnect] :
-                    false,
+                    true,
                 useUrlParams
             )
         );

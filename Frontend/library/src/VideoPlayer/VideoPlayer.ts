@@ -40,8 +40,12 @@ export class VideoPlayer {
         this.videoElement.style.height = '100%';
         this.videoElement.style.position = 'absolute';
         this.videoElement.style.pointerEvents = 'all';
+        this.videoElement.muted = true;
         videoElementParent.appendChild(this.videoElement);
-
+        this.videoElement.onloadedmetadata = async () => {
+            this.onVideoInitialized();
+            await this.autoInitialize();
+        };
         this.onResizePlayerCallback = () => {
             console.log(
                 'Resolution changed, restyling player, did you forget to override this function?'
@@ -78,6 +82,23 @@ export class VideoPlayer {
         this.audioElement = audioElement;
     }
 
+    private async autoInitialize(): Promise<void> {
+        try {
+            await this.play();
+            
+            // Add a one-time click handler to unmute
+            const unmute = () => {
+                this.videoElement.muted = false;
+                if (this.audioElement) {
+                    this.audioElement.muted = false;
+                }
+                document.removeEventListener('click', unmute);
+            };
+            document.addEventListener('click', unmute);
+        } catch (e) {
+            Logger.Log(Logger.GetStackTrace(), `Auto-play failed: ${e}`, 6);
+        }
+    }
     /**
      * Sets up the video element with any application config and plays the video element.
      * @returns A promise for if playing the video was successful or not.

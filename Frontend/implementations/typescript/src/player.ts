@@ -2,7 +2,7 @@
 
 export * from '@epicgames-ps/lib-pixelstreamingfrontend-ue5.5';
 export * from '@epicgames-ps/lib-pixelstreamingfrontend-ui-ue5.5';
-import { Config, PixelStreaming } from '@epicgames-ps/lib-pixelstreamingfrontend-ue5.4';
+import { Config, PixelStreaming, Flags } from '@epicgames-ps/lib-pixelstreamingfrontend-ue5.4';
 import { Application, PixelStreamingApplicationStyle } from '@epicgames-ps/lib-pixelstreamingfrontend-ui-ue5.4';
 const PixelStreamingApplicationStyles =
     new PixelStreamingApplicationStyle();
@@ -19,7 +19,8 @@ document.body.onload = function() {
 
 	// Create a config object
 	const config = new Config({ useUrlParams: true });
-
+	config.setFlagEnabled(Flags.HoveringMouseMode, true);
+	config.setFlagEnabled(Flags.SimulateTouch, true);
 	// Create a Native DOM delegate instance that implements the Delegate interface class
 	const stream = new PixelStreaming(config);
 
