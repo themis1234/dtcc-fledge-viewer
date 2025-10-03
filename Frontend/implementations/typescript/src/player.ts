@@ -14,22 +14,44 @@ declare global {
 }
 
 document.body.onload = function() {
-	// Example of how to set the logger level
-	// Logger.SetLoggerVerbosity(10);
-
-	// Create a config object
 	const config = new Config({ useUrlParams: true });
 	config.setFlagEnabled(Flags.HoveringMouseMode, true);
 	config.setFlagEnabled(Flags.FakeMouseWithTouches, true);
-	// Create a Native DOM delegate instance that implements the Delegate interface class
+	
 	const stream = new PixelStreaming(config);
 
 	const application = new Application({
 		stream,
 		onColorModeChanged: (isLightMode) => PixelStreamingApplicationStyles.setColorMode(isLightMode)
 	});
-	// document.getElementById("centrebox").appendChild(application.rootElement);
+	
 	document.body.appendChild(application.rootElement);
+	
+	// Listen for messages from the Unreal Engine server
+	stream.addResponseEventListener('add_response', (message: any) => {
+		console.log('Received message from server:', message);
+		
+		// The message structure typically contains:
+		// - message.data: the actual data sent from UE
+		
+		// If it's a string message
+		if (typeof message.data === 'string') {
+			console.log('String message:', message.data);
+			// Parse JSON if needed
+			try {
+				const jsonData = JSON.parse(message.data);
+				console.log('Parsed JSON:', jsonData);
+			} catch (e) {
+				// Not JSON, just a plain string
+			}
+		}
+		// If it's binary data
+		else if (message.data instanceof ArrayBuffer) {
+			console.log('Binary message received');
+		}
+	});
+
+	// You can also listen for specific response types if you're using the emitUIInteraction pattern
 	
 	window.pixelStreaming = stream;
 }
