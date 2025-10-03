@@ -20,7 +20,7 @@ document.body.onload = function() {
 	// Create a config object
 	const config = new Config({ useUrlParams: true });
 	config.setFlagEnabled(Flags.HoveringMouseMode, true);
-	config.setFlagEnabled(Flags.TouchInput, true);
+	config.setFlagEnabled(Flags.FakeMouseWithTouches, true);
 	// Create a Native DOM delegate instance that implements the Delegate interface class
 	const stream = new PixelStreaming(config);
 
